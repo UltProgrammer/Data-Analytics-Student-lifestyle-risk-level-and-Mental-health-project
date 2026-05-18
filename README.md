@@ -1,52 +1,104 @@
-Student Mental Health and Burnout Prediction
-Project Overview
-This project aims to analyze and predict student mental health risk levels, dropout risk, mental health index, and burnout scores using a comprehensive dataset. By leveraging machine learning models, we identify key factors influencing student well-being and academic outcomes, providing insights that can help in developing targeted interventions.
+# Student Mental Health & Performance Data Analytics
 
-Dataset
-The dataset used in this project contains 1 million entries with various features related to student demographics, academic life, personal well-being, and mental health indicators. Key features include:
+A comprehensive data analytics and machine learning project exploring the relationships between student mental health indicators and academic performance, using a dataset of 1 million student records.
 
-Demographics: age, gender, academic_year
-Academic Factors: study_hours_per_day, exam_pressure, academic_performance
-Mental Health Indicators: stress_level, anxiety_score, depression_score, sleep_hours, physical_activity, social_support, screen_time, internet_usage, financial_stress, family_expectation
-Target Variables: burnout_score, mental_health_index, risk_level (Low, Medium, High), dropout_risk
-Methodology
-The project follows a structured machine learning pipeline:
+## Overview
 
-Data Loading and Initial Inspection: The dataset was loaded into a pandas DataFrame, and an initial inspection was performed to understand its structure, data types, and identify missing values.
-Data Cleaning and Preprocessing:
-Missing values were handled (though none were found in this specific dataset).
-Categorical features (gender and risk_level) were encoded: gender using one-hot encoding and risk_level using label encoding (Low: 0, Medium: 1, High: 2) due to its ordinal nature.
-Numerical features were transformed to integers based on specific rounding rules to ensure data consistency.
-Exploratory Data Analysis (EDA) and Descriptive Analysis:
-Distribution Analysis: Histograms and count plots were generated to visualize the distributions of all features, including numerical and encoded categorical variables.
-Correlation Analysis: A heatmap was used to visualize the correlation matrix of numerical features. Strong correlations (absolute value > 0.5) were further visualized using scatter plots to understand the relationships between feature pairs.
-Target Variable Analysis: The distribution of risk_level_encoded was analyzed, and box plots were used to illustrate how numerical features vary across different risk levels.
-Gender Relationship: The relationship between encoded gender and risk level was explored using count plots.
-Machine Learning Model Building: Multiple machine learning models were trained for different prediction tasks:
-Classification (Predicting Risk Level): Logistic Regression and Random Forest Classifier were used to predict risk_level_encoded.
-Regression (Predicting Dropout Risk): A Random Forest Regressor was trained to predict dropout_risk.
-Regression (Predicting Mental Health Index): A Random Forest Regressor was trained to predict mental_health_index.
-Regression (Predicting Burnout Score): A Random Forest Regressor was trained to predict burnout_score.
-Hyperparameter tuning for the Random Forest Classifier was skipped due to sufficient untuned performance and computational cost for the large dataset.
-Interactive Prediction Interface: An interactive interface using ipywidgets was developed to allow users to input feature values and obtain real-time predictions from the trained models for risk level, dropout risk, mental health index, and burnout score.
-Key Findings and Model Performance
-Model Performance:
-Risk Level Classification:
-Logistic Regression: Achieved an accuracy of 0.9334 (test set) and 0.9329 (cross-validation). While overall accuracy is high, recall for the 'High Risk' category (Class 2) was lower (0.60), indicating challenges in correctly identifying this minority class.
-Random Forest Classifier: Achieved an accuracy of 0.9303 (test set) and 0.9298 (cross-validation). Similar to Logistic Regression, it performed very well on 'Low Risk' and 'Medium Risk', but less effectively on 'High Risk'.
-Dropout Risk Regression:
-Random Forest Regressor: Achieved a Mean Absolute Error (MAE) of 0.6938, Mean Squared Error (MSE) of 0.7921, and an R-squared (R²) of 0.5816. This R² value indicates that about 58% of the variance in dropout_risk can be explained by the model's features.
-Mental Health Index Regression:
-Random Forest Regressor: Achieved a Mean Absolute Error (MAE) of 0.1916, Mean Squared Error (MSE) of 0.0964, and an R-squared (R²) of 0.9466. This model shows excellent predictive capability for the mental_health_index.
-Burnout Score Regression:
-Random Forest Regressor: Achieved a Mean Absolute Error (MAE) of 0.7141, Mean Squared Error (MSE) of 0.8750, and an R-squared (R²) of 0.6931. This model demonstrates good predictive power for burnout_score.
-Key Data Insights from EDA and Feature Importance:
-Dominant Predictors for Risk Level: burnout_score and mental_health_index are the most influential features in predicting risk_level_encoded. stress_level, anxiety_score, and depression_score also contribute significantly.
-Strong Correlations: A strong negative correlation exists between burnout_score and mental_health_index. Burnout_score, stress_level, anxiety_score, and depression_score are highly positively correlated. Mental_health_index is negatively correlated with these stress-related scores. Exam_pressure and study_hours_per_day show a notable positive correlation.
-Target Variable Imbalance: The risk_level_encoded distribution is heavily skewed towards 'Low Risk', explaining the high overall accuracy but also the challenge in predicting 'High Risk' cases.
-Feature Relationships with Risk Level: Higher burnout_score, stress_level, anxiety_score, and depression_score are associated with higher risk_level_encoded. Conversely, lower mental_health_index, sleep_hours, and social_support are generally linked to higher risk_level_encoded.
-Gender Impact: While included, gender appears to have less influence on risk_level_encoded compared to psychological and academic stress-related variables.
-These insights highlight the critical role of mental well-being indicators in determining a student's risk level and dropout likelihood. Interventions targeting these areas could be highly effective.
+This project performs end-to-end data analysis and predictive modeling on student mental health and burnout data. It covers data cleaning, exploratory data analysis (EDA), correlation analysis, and the training of multiple machine learning models to predict key student well-being outcomes. The notebook concludes with an interactive prediction interface built using `ipywidgets`.
 
-Conclusion
-This project successfully developed and evaluated machine learning models for predicting various aspects of student mental health and academic risk. The interactive prediction interface provides a practical tool for exploring these predictions based on input features, offering valuable insights for educators, counselors, and policymakers aiming to support student well-being.
+## Dataset
+
+- **File:** `student_mental_health_burnout_1M.csv`
+- **Size:** ~1 million student records
+- **Key Features:**
+  - Academic: `academic_year`, `study_hours_per_day`, `exam_pressure`, `academic_performance`
+  - Mental Health: `stress_level`, `anxiety_score`, `depression_score`, `burnout_score`, `mental_health_index`
+  - Lifestyle: `sleep_hours`, `physical_activity`, `social_support`, `screen_time`, `internet_usage`
+  - Socioeconomic: `financial_stress`, `family_expectation`
+  - Demographic: `age`, `gender`
+  - Targets: `risk_level` (Low / Medium / High), `dropout_risk`
+
+## Project Structure
+
+```
+├── student_mental_health_burnout_1M.csv   # Dataset (not included in repo)
+└── Student_Mental_Health_and_Performance_Data_Analytics_Project.ipynb
+```
+
+## Notebook Sections
+
+### 1. Data Loading & Initial Inspection
+- Load the CSV into a pandas DataFrame
+- Inspect data types, shape, and descriptive statistics
+- Check for missing values
+
+### 2. Data Cleaning & Preprocessing
+- Drop rows with missing values
+- One-hot encode `gender`
+- Label encode `risk_level` (Low=0, Medium=1, High=2)
+- Apply rounding rules to convert float features to integers (ceil, floor, round)
+
+### 3. Exploratory Data Analysis (EDA)
+- **3.1** Distribution plots for all numerical features (histograms + KDE)
+- **3.2** Correlation heatmap; strong-correlation heatmap (|r| > 0.5); scatter plots for strongly correlated feature pairs
+- **3.3** Target variable (`risk_level_encoded`) distribution
+- **3.4** Box plots showing feature distributions across risk levels
+- **3.5** Gender vs. risk level analysis
+
+### 4. Machine Learning Models
+
+| Task | Model | Metric | Score |
+|------|-------|--------|-------|
+| Risk Level Classification | Logistic Regression | Accuracy | 93.34% |
+| Risk Level Classification | Random Forest Classifier | Accuracy | 93.03% |
+| Dropout Risk Regression | Random Forest Regressor | R² | 0.5816 |
+| Mental Health Index Regression | Random Forest Regressor | — | — |
+| Burnout Score Regression | Random Forest Regressor | — | — |
+
+- 70/30 train-test split with stratification (classification)
+- 5-fold stratified cross-validation
+- `StandardScaler` applied for Logistic Regression
+- Feature importance analysis for Random Forest Classifier
+
+### 5. Interactive Prediction Interface
+Three `ipywidgets`-powered panels for real-time predictions:
+- **Panel 1:** Predict Risk Level (Logistic Regression + Random Forest) & Dropout Risk
+- **Panel 2:** Predict Mental Health Index
+- **Panel 3:** Predict Burnout Score
+
+## Key Findings
+
+1. **`burnout_score`** and **`mental_health_index`** are the strongest predictors of student risk level.
+2. `stress_level`, `anxiety_score`, and `depression_score` are highly positively correlated with each other and with `burnout_score`.
+3. `mental_health_index` is strongly negatively correlated with `stress_level`, `anxiety_score`, and `depression_score`.
+4. The dataset is heavily skewed toward the **Low Risk** class, making correct identification of **High Risk** students the primary challenge.
+5. Lower `sleep_hours` and `social_support` are clearly associated with higher risk levels.
+
+## Requirements
+
+```
+pandas
+numpy
+matplotlib
+seaborn
+scikit-learn
+ipywidgets
+scipy
+```
+
+Install all dependencies with:
+
+```bash
+pip install pandas numpy matplotlib seaborn scikit-learn ipywidgets scipy
+```
+
+## Usage
+
+1. Upload the notebook to [Google Colab](https://colab.research.google.com/) or run locally in Jupyter.
+2. Place `student_mental_health_burnout_1M.csv` at `/content/` (Colab) or update `file_path` in the first cell.
+3. Run all cells in order (`Runtime → Run all` in Colab).
+4. Scroll to **Section 5** to use the interactive prediction panels.
+
+## License
+
+This project is for educational and research purposes.
